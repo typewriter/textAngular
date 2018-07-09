@@ -330,8 +330,17 @@ function($document, taDOM){
 		// topNode is the contenteditable normally, all manipulation MUST be inside this.
 		insertHtml: function(html, topNode){
 			var parent, secondParent, _childI, nodes, i, lastNode, _tempFrag;
-			var element = angular.element("<div>" + html + "</div>");
-			var range = rangy.getSelection().getRangeAt(0);
+
+      // NOTE: Dirty fix
+      var range = rangy.getSelection().getRangeAt(0);
+      if (range.startContainer && range.startContainer.className && range.startContainer.className.length > 0) {
+        range.selectNodeContents(document.querySelector('.ta-scroll-window>.ta-bind'));
+      }
+      if (range.startOffset === 0 && (range.endContainer.wholeText === undefined || range.endOffset === range.endContainer.wholeText.length)) {
+        html = ['<div>', html, '</div>'].join('');
+      }
+
+      var element = angular.element("<div>" + html + "</div>");
 			var frag = _document.createDocumentFragment();
 			var children = element[0].childNodes;
 			var isInline = true;
