@@ -1982,6 +1982,13 @@ angular.module('textAngular.taBind', ['textAngular.factories', 'textAngular.DOM'
 
 			var _ensureContentWrapped = function(value) {
 				if (_blankTest(value)) return value;
+
+				// wrap first line in default tag not to detect as text
+				value = value.replace(
+					new RegExp(`(.*?)(<${attrs.taDefaultWrap}>.*)`),
+					`<${attrs.taDefaultWrap}>$1</${attrs.taDefaultWrap}>$2`
+				);
+
 				var domTest = angular.element("<div>" + value + "</div>");
 				//console.log('domTest.children().length():', domTest.children().length);
 				if (domTest.children().length === 0) {
